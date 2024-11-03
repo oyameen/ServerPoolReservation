@@ -1,22 +1,26 @@
 package com.oyameen.serverpoolreservation.repositories;
 
 import com.oyameen.serverpoolreservation.model.Server;
+import com.oyameen.serverpoolreservation.model.ServerStatus;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ServerPoolRepository extends MongoRepository<Server, Long> {
-    default void update(Server s) {
+    default void activate(Server s) {
+        System.out.println("====> Start activating server with id = " + s.getId());
         Server originServer = findById(s.getId()).get();
 
-        System.out.println("----> id is = " + s.getId() + "\t" + s.getVersion() + "\t" + originServer.getVersion());
-
         if (s.getVersion() != originServer.getVersion()) {
-            System.err.println("Incorrect version.");
+            System.err.println("Server with id = [ " + s.getId() + " ] not activated, Incorrect version.");
         } else {
-            System.out.println("====> id is = " + s.getId() + "\t" + s.getVersion() + "\t" + originServer.getVersion());
             s.setVersion(s.getVersion() + 1);
+            s.setServerStatus(ServerStatus.ACTIVE);
+            s.setCapacity(originServer.getCapacity());
+            s.setNumberOfUser(originServer.getNumberOfUser());
+            s.setUsers(originServer.getUsers());
             save(s);
+            System.out.println("Server with id = [ " + s.getId() + " ] was activated successfully.");
         }
     }
 }

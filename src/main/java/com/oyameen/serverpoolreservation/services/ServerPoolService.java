@@ -38,7 +38,7 @@ public class ServerPoolService {
                 }
                 server.getUsers().add(userName);
                 server.setNumberOfUser(server.getNumberOfUser() + 1);
-                serverPoolRepository.update(server);
+                serverPoolRepository.save(server);
                 if (capacity == 0) {
                     return;
                 }
@@ -50,14 +50,13 @@ public class ServerPoolService {
             List<String> usersOfServer = new ArrayList<>();
             Server newServer = new Server(newId, 0, ServerStatus.CREATING, 0, usersOfServer, 1);
             serverPoolRepository.save(newServer);
-            System.out.println("Server with id= " + newServer.getId() + " now is in = " + newServer.getServerStatus());
+            System.out.println("Server with id = [ " + newServer.getId() + " ] was created successfully.");
             activateServer(newServer);
             allocateNewServer(capacity, userName);
         }
     }
 
-    public void activateServer(Server s) {
-        Server server = serverPoolRepository.findById(s.getId()).get();
+    public void activateServer(Server server) {
         Thread thread = new Thread(() ->
         {
             try {
@@ -65,9 +64,7 @@ public class ServerPoolService {
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-            server.setServerStatus(ServerStatus.ACTIVE);
-            serverPoolRepository.update(server);
-            System.out.println("Server with id= " + server.getId() + " now is in = " + server.getServerStatus());
+            serverPoolRepository.activate(server);
         });
         thread.start();
     }
