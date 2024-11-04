@@ -23,7 +23,11 @@ public class ServerPoolService {
     @Autowired
     private StateMachineFactory<ServerStatus, ServerEvent> stateMachineFactory;
 
-    public List<Server> getAllServers() {
+    public List<Server> getAllServers(ServerStatus serverStatus) {
+        if (serverStatus != null) {
+            return serverPoolRepository.findAllByServerStatus(serverStatus);
+        }
+
         return serverPoolRepository.findAll();
     }
 

@@ -5,6 +5,8 @@ import com.oyameen.serverpoolreservation.model.ServerStatus;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface ServerPoolRepository extends MongoRepository<Server, Long> {
     default void activate(Server s) {
@@ -23,4 +25,6 @@ public interface ServerPoolRepository extends MongoRepository<Server, Long> {
             System.out.println("Server with id = [ " + s.getId() + " ] was activated successfully.");
         }
     }
+
+    List<Server> findAllByServerStatus(ServerStatus serverStatus);
 }

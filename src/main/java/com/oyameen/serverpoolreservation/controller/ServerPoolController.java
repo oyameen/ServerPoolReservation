@@ -1,10 +1,12 @@
 package com.oyameen.serverpoolreservation.controller;
 
 import com.oyameen.serverpoolreservation.model.Server;
+import com.oyameen.serverpoolreservation.model.ServerStatus;
 import com.oyameen.serverpoolreservation.services.ServerPoolService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -17,8 +19,9 @@ public class ServerPoolController {
     private int sum;
 
     @GetMapping("/servers")
-    public List<Server> getAllServers() {
-        return serverPoolService.getAllServers();
+    public List<Server> getAllServers(@RequestParam(
+            value = "status", required = false) ServerStatus serverStatus) {
+        return serverPoolService.getAllServers(serverStatus);
     }
 
     @GetMapping("/servers/{id}")
