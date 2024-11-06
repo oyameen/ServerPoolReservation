@@ -1,4 +1,4 @@
-FROM gradle:jdk21-alpine
+FROM gradle:jdk21-alpine AS base
 
 WORKDIR /app
 
@@ -7,11 +7,13 @@ COPY src/ ./src/
 
 RUN gradle clean build -x test --parallel
 
-#COPY build/libs/server-pool-reservation-1.0.jar output/app.jar
+FROM base AS build
 
-ADD src/main/resources/application.properties config/
+WORKDIR /application
+
+COPY --from=base /app/build/libs/server-pool-reservation-1.0.jar output/app.jar
+COPY --from=base /app/src/main/resources/application.properties config/
 
 EXPOSE 9091
 
-#ENTRYPOINT ["java", "-jar", "output/app.jar"]
-ENTRYPOINT ["java", "-jar", "build/libs/server-pool-reservation-1.0.jar"]
+ENTRYPOINT ["java", "-jar", "/application/output/app.jar"]
