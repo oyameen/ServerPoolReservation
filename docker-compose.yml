@@ -2,9 +2,9 @@ services:
   app:
     build: .
     restart: always
-    container_name: server-pool-reservation
+    container_name: ServerPoolReservation
     ports:
-      - ${APP_PORT}:${APP_PORT}
+      - ${APP_PORT}:8080
     env_file:
       - ./.env
     depends_on:
@@ -13,7 +13,7 @@ services:
   mongo:
     image: mongo
     restart: always
-    container_name: server-pool-reservation-mongo
+    container_name: ServerPoolReservation-MongoDB
     ports:
       - ${MONGO_DB_PORT}:27017
     environment:
@@ -23,7 +23,7 @@ services:
   mongo-express:
     image: mongo-express
     restart: always
-    container_name: server-pool-reservation-mongo-express
+    container_name: ServerPoolReservation-MongoExpress
     ports:
       - ${MONGO_EXPRESS_PORT}:8081
     depends_on:
@@ -31,5 +31,5 @@ services:
     environment:
       ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGO_DB_USER}
       ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGO_DB_PASSWORD}
-      ME_CONFIG_MONGODB_URL: mongodb://${MONGO_DB_USER}:${MONGO_DB_PASSWORD}@mongo:${MONGO_DB_PORT}/
+      ME_CONFIG_MONGODB_URL: mongodb://${MONGO_DB_USER}:${MONGO_DB_PASSWORD}@mongo:27017/
       ME_CONFIG_BASICAUTH: false

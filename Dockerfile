@@ -14,6 +14,6 @@ WORKDIR /application
 COPY --from=base /app/build/libs/server-pool-reservation-1.0.jar output/app.jar
 COPY --from=base /app/src/main/resources/application.properties config/
 
-EXPOSE 9091
+EXPOSE 8082
 
 ENTRYPOINT ["java", "-jar", "/application/output/app.jar"]
